@@ -1,0 +1,82 @@
+import React, { useState } from 'react';
+
+const PRODUCTS = [
+  { id: 1, name: 'Chocolate Fudge', price: 200 },
+  { id: 2, name: 'Vanilla Ice Cream', price: 150 },
+  { id: 3, name: 'Strawberry Swirl', price: 180 },
+  { id: 4, name: 'Belgian Dark Chocolate', price: 250 }
+];
+
+function App() {
+  const [cart, setCart] = useState([]);
+  const [referral, setReferral] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(20);
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
+  const applyReferral = () => {
+    if (referral.trim() === 'PravalikaSingarapu') {
+      setAppliedDiscount(30);
+      alert('Referral code applied! You now get 30% off.');
+    } else {
+      alert('Invalid referral code. Default 20% discount applied.');
+      setAppliedDiscount(20);
+    }
+  };
+
+  const total = cart.reduce((acc, item) => acc + item.price, 0);
+  const finalTotal = total - (total * appliedDiscount) / 100;
+
+  return (
+    <div style={{ fontFamily: 'sans-serif', padding: 20, backgroundColor: '#fceef5' }}>
+      <h1 style={{ color: '#d6336c' }}>🍫 Pick Your Favourite 🍦</h1>
+      <h2>All Ice Creams & Chocolates at 20% Discount</h2>
+
+      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginTop: 20 }}>
+        {PRODUCTS.map((product) => (
+          <div key={product.id} style={{
+            border: '1px solid #ccc', padding: 15, borderRadius: 10,
+            backgroundColor: '#fff', width: 220
+          }}>
+            <h3>{product.name}</h3>
+            <p>Price: ₹{product.price}</p>
+            <button onClick={() => addToCart(product)}>Add to Cart</button>
+          </div>
+        ))}
+      </div>
+
+      <hr style={{ margin: '40px 0' }} />
+
+      <h2>🛒 Your Cart</h2>
+      {cart.length === 0 ? <p>No items added yet.</p> : (
+        <>
+          <ul>
+            {cart.map((item, index) => (
+              <li key={index}>{item.name} – ₹{item.price}</li>
+            ))}
+          </ul>
+          <p>Total: ₹{total}</p>
+          <p>Discount: {appliedDiscount}%</p>
+          <p><strong>Final Price: ₹{finalTotal.toFixed(2)}</strong></p>
+
+          <input
+            type="text"
+            placeholder="Enter referral code"
+            value={referral}
+            onChange={(e) => setReferral(e.target.value)}
+          />
+          <button onClick={applyReferral}>Apply Code</button>
+        </>
+      )}
+
+      <footer style={{ marginTop: 50, padding: 20, backgroundColor: '#fff3f8', borderTop: '1px solid #ccc' }}>
+        <p>📢 Use referral code <strong>PravalikaSingarapu</strong> to get <strong>30% OFF</strong>!</p>
+        <p style={{ fontSize: 12, color: '#888' }}>© 2025 Pick Your Favourite. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
